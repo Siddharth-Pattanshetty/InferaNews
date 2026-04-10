@@ -103,29 +103,6 @@ ML Models (SVM + FAISS + Transformer)
 * Modular microservice architecture
 * Clean separation of frontend, backend, and ML layers
 
----
-
-## ⚠️ Notes
-
-* ML model files are excluded from the repository due to large size
-* Download them from the provided Google Drive link
-* Ensure models are placed in `ml_services/app/models/`
-
----
-
-## 🚀 Future Enhancements
-
-* Deploy using Docker / Cloud platforms
-* Add caching for faster summarization
-* Improve personalization using user behavior
-* Integrate real-time news APIs
-* Add authentication & user profiles
-
----
-
-## 📌 Resume Highlight
-
-Developed **InferaNews**, a full-stack AI-powered news platform with automated classification, semantic similarity search using FAISS, and transformer-based summarization, built using a scalable microservice architecture.
 
 ---
 
