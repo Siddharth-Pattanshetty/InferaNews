@@ -1,11 +1,14 @@
-import pickle
+import joblib
+from pathlib import Path
 from app.config import MODEL_PATH
 
-model=pickle.load(open(f"{MODEL_PATH}svm_model.pkl", "rb"))
-vectorizer=pickle.load(open(f"{MODEL_PATH}vectorizer.pkl", "rb"))
+MODEL_PATH = Path(MODEL_PATH)
+
+model = joblib.load(MODEL_PATH / "logistic_regression_model.pkl")
+vectorizer = joblib.load(MODEL_PATH / "tfidf_vectorizer.pkl")
 
 def classify_text(headline: str, short_description: str):
-    text=headline+" "+short_description
+    text=(headline+" "+short_description).lower()
     
     vec = vectorizer.transform([text])
     prediction = model.predict(vec)[0]
