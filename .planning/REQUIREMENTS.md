@@ -104,45 +104,45 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SETUP-01 | — | Pending |
-| SETUP-02 | — | Pending |
-| SETUP-03 | — | Pending |
-| SETUP-04 | — | Pending |
-| SETUP-05 | — | Pending |
-| AUTH-01 | — | Pending |
-| AUTH-02 | — | Pending |
-| AUTH-03 | — | Pending |
-| AUTH-04 | — | Pending |
-| ARTICLE-01 | — | Pending |
-| ARTICLE-02 | — | Pending |
-| ARTICLE-03 | — | Pending |
-| ARTICLE-04 | — | Pending |
-| ARTICLE-05 | — | Pending |
-| ARTICLE-06 | — | Pending |
-| ARTICLE-07 | — | Pending |
-| ARTICLE-08 | — | Pending |
-| SEARCH-01 | — | Pending |
-| SEARCH-02 | — | Pending |
-| ML-01 | — | Pending |
-| ML-02 | — | Pending |
-| ML-03 | — | Pending |
-| ML-04 | — | Pending |
-| ML-05 | — | Pending |
-| ML-06 | — | Pending |
-| ML-07 | — | Pending |
-| INFRA-01 | — | Pending |
-| INFRA-02 | — | Pending |
-| INFRA-03 | — | Pending |
-| INFRA-04 | — | Pending |
-| INFRA-05 | — | Pending |
-| INFRA-06 | — | Pending |
-| INFRA-07 | — | Pending |
-| FIX-01 | — | Pending |
+| SETUP-01 | Phase 1 | Pending |
+| SETUP-02 | Phase 1 | Pending |
+| SETUP-03 | Phase 1 | Pending |
+| SETUP-04 | Phase 1 | Pending |
+| SETUP-05 | Phase 1 | Pending |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Pending |
+| AUTH-04 | Phase 2 | Pending |
+| ARTICLE-01 | Phase 3 | Pending |
+| ARTICLE-02 | Phase 3 | Pending |
+| ARTICLE-03 | Phase 3 | Pending |
+| ARTICLE-04 | Phase 3 | Pending |
+| ARTICLE-05 | Phase 3 | Pending |
+| ARTICLE-06 | Phase 3 | Pending |
+| ARTICLE-07 | Phase 3 | Pending |
+| ARTICLE-08 | Phase 3 | Pending |
+| SEARCH-01 | Phase 5 | Pending |
+| SEARCH-02 | Phase 5 | Pending |
+| ML-01 | Phase 4 | Pending |
+| ML-02 | Phase 4 | Pending |
+| ML-03 | Phase 4 | Pending |
+| ML-04 | Phase 4 | Pending |
+| ML-05 | Phase 4 | Pending |
+| ML-06 | Phase 4 | Pending |
+| ML-07 | Phase 4 | Pending |
+| INFRA-01 | Phase 6 | Pending |
+| INFRA-02 | Phase 6 | Pending |
+| INFRA-03 | Phase 6 | Pending |
+| INFRA-04 | Phase 6 | Pending |
+| INFRA-05 | Phase 6 | Pending |
+| INFRA-06 | Phase 6 | Pending |
+| INFRA-07 | Phase 6 | Pending |
+| FIX-01 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 34 total
-- Mapped to phases: 0
-- Unmapped: 34 ⚠️
+- Mapped to phases: 34
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-24*
