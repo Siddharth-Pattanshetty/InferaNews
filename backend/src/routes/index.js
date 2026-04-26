@@ -23,7 +23,7 @@ router.get('/health', (req, res) => {
 const authRoutes = require('./authRoutes');
 router.use('/auth', authRoutes);
 
-// Future route mounts:
-// router.use('/articles', articleRoutes);
+const articleRoutes = require('./articleRoutes');
+router.use('/articles', articleRoutes);
 
 module.exports = router;
