@@ -194,10 +194,54 @@ const deleteArticle = async (req, res) => {
   }
 };
 
+// @desc    Search articles by keyword
+// @route   GET /api/v1/articles/search
+// @access  Public
+const searchArticles = async (req, res) => {
+  try {
+    const query = req.query.q;
+    
+    // Fallback to list view if query is empty
+    if (!query || query.trim() === '') {
+      return getArticles(req, res);
+    }
+
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 50);
+    const skip = (page - 1) * limit;
+
+    const filter = { $text: { $search: query } };
+    const projection = { score: { $meta: 'textScore' } };
+    const sort = { score: { $meta: 'textScore' } };
+
+    const [articles, total] = await Promise.all([
+      Article.find(filter, projection).sort(sort).skip(skip).limit(limit),
+      Article.countDocuments(filter),
+    ]);
+
+    res.json({
+      success: true,
+      data: articles,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit),
+        limit,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getArticles,
   getArticle,
   createArticle,
   updateArticle,
   deleteArticle,
+  searchArticles,
 };

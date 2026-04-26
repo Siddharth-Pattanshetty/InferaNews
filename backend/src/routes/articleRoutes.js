@@ -5,11 +5,13 @@ const {
   createArticle,
   updateArticle,
   deleteArticle,
+  searchArticles,
 } = require('../controllers/articleController');
 const { protect } = require('../middleware/auth');
 const router = express.Router();
 
 // Public routes
+router.get('/search', searchArticles);
 router.get('/', getArticles);
 router.get('/:id', getArticle);
 
