@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
+const seedAdmin = require('./config/seed');
 const { PORT, NODE_ENV, CORS_ORIGIN } = require('./config/env');
 const apiRoutes = require('./routes');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
@@ -45,6 +46,7 @@ app.use(errorHandler);
 // Start server
 const startServer = async () => {
   await connectDB();
+  await seedAdmin();
   app.listen(PORT, () => {
     console.log(`Server running in ${NODE_ENV} mode on port ${PORT}`);
   });
