@@ -1,4 +1,5 @@
 const Article = require('../models/Article');
+const mlService = require('../services/mlService');
 
 // @desc    Get all articles (paginated, filterable, sortable)
 // @route   GET /api/v1/articles
@@ -77,12 +78,31 @@ const getArticle = async (req, res) => {
 // @access  Private (admin)
 const createArticle = async (req, res) => {
   try {
-    const { title, description, content, category } = req.body;
+    const { title, description, content } = req.body;
+    let category = req.body.category;
+    let summary = '';
+
+    // Auto-enrichment
+    const [mlCategory, mlSummary] = await Promise.all([
+      mlService.classifyText(title, description),
+      mlService.summarizeText(content),
+    ]);
+
+    if (!category && mlCategory) {
+      // Use ML category if admin didn't provide one
+      category = mlCategory;
+    }
+    
+    if (mlSummary) {
+      summary = mlSummary;
+    }
+
     const article = await Article.create({
       title,
       description,
       content,
-      category,
+      category: category || 'uncategorized',
+      summary,
     });
     res.status(201).json({
       success: true,

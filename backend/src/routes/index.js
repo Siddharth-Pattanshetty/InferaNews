@@ -26,4 +26,7 @@ router.use('/auth', authRoutes);
 const articleRoutes = require('./articleRoutes');
 router.use('/articles', articleRoutes);
 
+const mlRoutes = require('./mlRoutes');
+router.use('/ml', mlRoutes);
+
 module.exports = router;
