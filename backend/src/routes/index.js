@@ -19,8 +19,11 @@ router.get('/health', (req, res) => {
   });
 });
 
-// Future route mounts will go here:
-// router.use('/auth', authRoutes);
+// Route mounts
+const authRoutes = require('./authRoutes');
+router.use('/auth', authRoutes);
+
+// Future route mounts:
 // router.use('/articles', articleRoutes);
 
 module.exports = router;
