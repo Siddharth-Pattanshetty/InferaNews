@@ -26,7 +26,7 @@ const PublicLayout = ({ children }) => (
         <Link to="/search"><Search size={18}/> Search</Link>
       </div>
       <div className="nav-actions">
-        <Link to="/admin" className="btn-secondary">Admin</Link>
+        {/* Admin link removed from public civilian route for security */}
       </div>
     </nav>
     <main className="main-content">
