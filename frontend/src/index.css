@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  /* Colors - The Neural Lens */
+  --bg-color: #0c1324;
+  --surface-low: #151b2d;
+  --surface: #191f31;
+  --surface-high: #23293c;
+  --surface-highest: #2e3447;
+  
+  --primary: #00f5ff;
+  --primary-dim: #00dce5;
+  --primary-dark: #006c71;
+  
+  --tertiary: #872fd5; /* Violet accent */
+  --tertiary-light: #ddb7ff;
+  
+  --text-primary: #e9feff;
+  --text-secondary: #b9caca;
+  --text-inverse: #002021;
+  
+  --ghost-border: rgba(58, 73, 74, 0.2);
+  --shadow-color: rgba(22, 27, 42, 0.8);
+  
+  /* Typography */
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--primary-dim);
+}
+
+/* Base Glassmorphism Utils */
+.glass-panel {
+  background: var(--surface);
+  border: 1px solid var(--ghost-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 32px var(--shadow-color);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-panel-high {
+  background: rgba(35, 41, 60, 0.6);
+  border: 1px solid var(--ghost-border);
+  border-radius: 0.75rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Button Utils */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dim));
+  color: var(--text-inverse);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 245, 255, 0.3);
+}
+
+.btn-secondary {
+  background: rgba(46, 52, 71, 0.4);
+  color: var(--text-primary);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--ghost-border);
+  font-family: var(--font-heading);
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(46, 52, 71, 0.6);
+}
+
+/* Input Utils */
+.glass-input {
+  background: var(--surface-low);
+  border: none;
+  border-bottom: 1px solid var(--ghost-border);
+  color: var(--text-primary);
+  padding: 0.75rem 1rem;
+  width: 100%;
+  font-family: var(--font-body);
+  transition: all 0.3s ease;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.glass-input:focus {
+  outline: none;
+  border-bottom: 1px solid var(--primary-dim);
+  box-shadow: 0 4px 12px rgba(0, 220, 229, 0.1);
+}
