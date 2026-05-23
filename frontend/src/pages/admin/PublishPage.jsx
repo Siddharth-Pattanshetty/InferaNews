@@ -1,124 +1,157 @@
 import { useState } from 'react';
-import { api } from '../../services/api';
-import { Send, CheckCircle2, FileText, BrainCircuit, Edit3 } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import { CheckCircle2, Loader2, Sparkles } from 'lucide-react';
+import api from '../../lib/axios';
+import { motion } from 'framer-motion';
 
 export default function PublishPage() {
-  const [step, setStep] = useState('INPUT'); // INPUT, PREVIEW, SUCCESS
+  const [step, setStep] = useState(1);
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [content, setContent] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [previewData, setPreviewData] = useState(null);
+  const [publishedArticle, setPublishedArticle] = useState(null);
 
-  const handleProcess = async (e) => {
+  const queryClient = useQueryClient();
+
+  const publishMutation = useMutation({
+    mutationFn: async (newArticle) => {
+      // Backend auto-calls ML to generate category and summary
+      const res = await api.post('/articles', newArticle);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['articles'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-stats'] });
+      setPublishedArticle(data);
+      setStep(3); // Go to success
+    },
+  });
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title.trim() || !content.trim()) return;
+    if (!title || !description || !content) return;
     
-    setLoading(true);
-    // Simulate analyzing the text to get a preview
-    const data = await api.analyzeText(content);
-    setPreviewData(data);
-    setLoading(false);
-    setStep('PREVIEW');
+    // We move to step 2 (Processing) and trigger the mutation
+    setStep(2);
+    publishMutation.mutate({ title, description, content });
   };
 
-  const handleConfirmPublish = async () => {
-    setLoading(true);
-    await api.publishArticle({ title, content, ...previewData });
-    setLoading(false);
-    setStep('SUCCESS');
-    
-    // Reset after a delay
-    setTimeout(() => {
-      setStep('INPUT');
-      setTitle('');
-      setContent('');
-      setPreviewData(null);
-    }, 4000);
+  const reset = () => {
+    setTitle('');
+    setDescription('');
+    setContent('');
+    setPublishedArticle(null);
+    setStep(1);
   };
 
   return (
-    <div className="page-content">
-      <h1 style={{fontSize: '2.5rem', marginBottom: '1rem'}}>Publish Intelligence</h1>
-      <p style={{marginBottom: '3rem', color: 'var(--text-secondary)'}}>
-        {step === 'INPUT' && "Submit raw text or URL. The AI will auto-categorize and summarize it."}
-        {step === 'PREVIEW' && "Review the neural classification and summary before final publishing."}
-        {step === 'SUCCESS' && "Intelligence has been securely transmitted to the network."}
-      </p>
+    <div className="max-w-3xl">
+      <h1 className="font-heading text-3xl font-bold mb-2">Publish Intelligence</h1>
+      <p className="text-text-2 mb-8">Enter raw data. AI will automatically classify and summarize.</p>
 
-      {step === 'INPUT' && (
-        <div className="glass-panel" style={{padding: '2.5rem', maxWidth: '800px'}}>
-          <form onSubmit={handleProcess} style={{display: 'flex', flexDirection: 'column', gap: '2rem'}}>
+      {step === 1 && (
+        <motion.form 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          onSubmit={handleSubmit} 
+          className="space-y-6"
+        >
+          <div className="glass-card p-8 space-y-6">
             <div>
-              <label style={{display: 'block', marginBottom: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600', letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: '0.85rem'}}>Intelligence Headline</label>
-              <input 
-                type="text" 
-                className="glass-input" 
+              <label className="block font-mono text-sm text-text-2 uppercase tracking-wider mb-2">Headline</label>
+              <input
+                type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter a high-impact headline..."
+                className="input-well text-xl font-bold"
+                placeholder="Enter headline..."
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block font-mono text-sm text-text-2 uppercase tracking-wider mb-2">Short Description</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="input-well min-h-[100px] resize-y"
+                placeholder="Brief summary for feed cards..."
+                required
               />
             </div>
 
             <div>
-              <label style={{display: 'block', marginBottom: '0.75rem', color: 'var(--text-secondary)', fontWeight: '600', letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: '0.85rem'}}>Article Source</label>
-              <textarea 
-                className="glass-input" 
+              <label className="block font-mono text-sm text-text-2 uppercase tracking-wider mb-2">Full Briefing</label>
+              <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder="Paste raw intelligence or URL here..."
-                style={{minHeight: '300px', resize: 'vertical'}}
+                className="input-well min-h-[300px] resize-y"
+                placeholder="Paste full article text here..."
+                required
               />
             </div>
+          </div>
 
-            <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '1rem'}}>
-              <button type="submit" className="btn-primary" disabled={loading} style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-                <BrainCircuit size={18} /> {loading ? 'Analyzing...' : 'Process Intelligence'}
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="flex justify-end">
+            <button type="submit" className="btn-primary flex items-center gap-2">
+              <Sparkles size={18} />
+              Process & Publish
+            </button>
+          </div>
+        </motion.form>
       )}
 
-      {step === 'PREVIEW' && previewData && (
-        <div style={{maxWidth: '800px'}}>
-          <div style={{display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem', marginBottom: '2rem'}}>
-            <div className="glass-panel" style={{padding: '2rem'}}>
-              <div style={{color: 'var(--primary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-                <BrainCircuit size={20} />
-                <h3 style={{fontSize: '1rem', margin: 0, textTransform: 'uppercase', letterSpacing: '0.1em'}}>Classification</h3>
-              </div>
-              <div style={{fontSize: '2rem', fontWeight: 'bold', color: 'var(--text-primary)'}}>{previewData.category}</div>
-              <p style={{marginTop: '0.5rem', color: 'var(--primary-dim)', fontSize: '0.9rem'}}>98% Confidence</p>
+      {step === 2 && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="glass-card p-12 flex flex-col items-center justify-center text-center space-y-6"
+        >
+          <Loader2 size={48} className="text-accent animate-spin" />
+          <div>
+            <h2 className="font-heading text-2xl font-bold mb-2">Analyzing Intelligence...</h2>
+            <p className="text-text-2">Routing through ML pipeline for classification and summarization.</p>
+          </div>
+          {publishMutation.isError && (
+            <div className="text-danger mt-4 bg-danger/10 p-4 rounded-lg">
+              Error: {publishMutation.error?.message || 'Failed to publish'}
+              <button onClick={() => setStep(1)} className="block mt-4 text-white underline">Go back</button>
             </div>
+          )}
+        </motion.div>
+      )}
 
-            <div className="glass-panel" style={{padding: '2rem'}}>
-              <div style={{color: 'var(--secondary)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-                <FileText size={20} />
-                <h3 style={{fontSize: '1rem', margin: 0, textTransform: 'uppercase', letterSpacing: '0.1em'}}>AI Summary</h3>
-              </div>
-              <p style={{fontSize: '1.05rem', lineHeight: 1.6, color: 'var(--text-primary)'}}>
-                {previewData.summary}
-              </p>
+      {step === 3 && publishedArticle && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="glass-card p-12 flex flex-col items-center justify-center text-center space-y-6"
+        >
+          <div className="w-20 h-20 bg-success/20 text-success rounded-full flex items-center justify-center mb-4">
+            <CheckCircle2 size={40} />
+          </div>
+          <div>
+            <h2 className="font-heading text-3xl font-bold mb-2">Successfully Published</h2>
+            <p className="text-text-2 mb-6">AI processing complete.</p>
+          </div>
+
+          <div className="w-full text-left bg-surface-2 p-6 rounded-xl space-y-4 mb-8">
+            <div>
+              <span className="text-text-2 text-sm">Predicted Category:</span>
+              <p className="font-mono text-accent uppercase tracking-wider">{publishedArticle.category}</p>
+            </div>
+            <div>
+              <span className="text-text-2 text-sm">Generated Abstract:</span>
+              <p className="text-text-1">{publishedArticle.summary || 'No summary generated.'}</p>
             </div>
           </div>
 
-          <div style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '1rem'}}>
-            <button onClick={() => setStep('INPUT')} className="btn-secondary" style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-              <Edit3 size={18} /> Edit Input
-            </button>
-            <button onClick={handleConfirmPublish} className="btn-glow" disabled={loading} style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
-              <Send size={18} /> {loading ? 'Publishing...' : 'Confirm & Publish'}
-            </button>
+          <div className="flex gap-4">
+            <button onClick={reset} className="btn-ghost">Publish Another</button>
+            <Link to={`/article/${publishedArticle._id}`} className="btn-primary" target="_blank">View Live Article</Link>
           </div>
-        </div>
-      )}
-
-      {step === 'SUCCESS' && (
-        <div className="glass-panel" style={{padding: '4rem 2rem', maxWidth: '800px', textAlign: 'center'}}>
-          <CheckCircle2 size={64} style={{color: 'var(--primary)', margin: '0 auto 2rem'}} />
-          <h2 style={{fontSize: '2rem', marginBottom: '1rem'}}>Transmission Successful</h2>
-          <p style={{color: 'var(--text-secondary)', fontSize: '1.1rem'}}>The intelligence report has been categorized, summarized, and published to the civilian feed.</p>
-        </div>
+        </motion.div>
       )}
     </div>
   );
