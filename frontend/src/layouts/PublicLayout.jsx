@@ -1,54 +1,41 @@
-import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Search, Compass } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { Link, Outlet } from 'react-router-dom';
+import { Search, BrainCircuit } from 'lucide-react';
 
 export default function PublicLayout() {
-  const location = useLocation();
-
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 glass-card mx-4 mt-4 px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-purple-600 flex items-center justify-center shadow-[0_0_15px_rgba(124,92,255,0.4)] group-hover:shadow-[0_0_25px_rgba(124,92,255,0.6)] transition-all">
-            <Compass size={18} className="text-white" />
-          </div>
-          <span className="font-heading font-bold text-xl tracking-tight text-text-1">
-            Infera<span className="text-accent">News</span>
-          </span>
-        </Link>
-
-        <div className="flex items-center gap-6">
-          <Link 
-            to="/" 
-            className={`font-medium transition-colors ${location.pathname === '/' ? 'text-accent' : 'text-text-2 hover:text-text-1'}`}
-          >
-            Feed
+      <header className="sticky top-0 z-50 bg-surface/90 backdrop-blur-md border-b border-border">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link to="/" className="text-xl font-heading font-bold text-accent">
+            InferaNews
           </Link>
-          <Link 
-            to="/search" 
-            className={`font-medium transition-colors flex items-center gap-1 ${location.pathname === '/search' ? 'text-cyan' : 'text-text-2 hover:text-text-1'}`}
-          >
-            <Search size={16} /> Search
-          </Link>
+          
+          <nav className="flex items-center gap-6">
+            <Link to="/" className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors">
+              Feed
+            </Link>
+            <Link to="/analyze" className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors flex items-center gap-1.5">
+              <BrainCircuit size={16} />
+              Analyze
+            </Link>
+            <Link to="/search" className="text-text-secondary hover:text-text-primary transition-colors">
+              <Search size={20} />
+            </Link>
+          </nav>
         </div>
-      </nav>
-
-      {/* Main Content with Page Transitions */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="h-full"
-          >
-            <Outlet />
-          </motion.div>
-        </AnimatePresence>
+      </header>
+      
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8">
+        <Outlet />
       </main>
+      
+      <footer className="border-t border-border bg-surface py-8">
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <p className="text-text-tertiary text-sm">
+            © {new Date().getFullYear()} InferaNews. Powered by AI Intelligence.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

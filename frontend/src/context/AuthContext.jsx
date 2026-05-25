@@ -16,21 +16,16 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(false);
         return;
       }
-
       try {
         const response = await api.get('/auth/me');
-        if (response.success) {
-          setUser(response.admin);
-        }
-      } catch (error) {
-        // Interceptor will handle token clearing on 401
+        if (response.success) setUser(response.admin);
+      } catch {
         setUser(null);
         setToken(null);
       } finally {
         setIsLoading(false);
       }
     };
-
     verifyToken();
   }, [token]);
 
@@ -56,22 +51,15 @@ export const AuthProvider = ({ children }) => {
     navigate('/');
   };
 
-  const value = {
-    user,
-    token,
-    isAuthenticated: !!user,
-    isLoading,
-    login,
-    logout,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, token, isAuthenticated: !!user, isLoading, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };

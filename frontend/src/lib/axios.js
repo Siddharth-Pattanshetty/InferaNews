@@ -7,7 +7,6 @@ const api = axios.create({
   },
 });
 
-// Add a request interceptor to inject the token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -19,18 +18,16 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Add a response interceptor to handle 401s globally
 api.interceptors.response.use(
-  (response) => response.data, // Extract the inner data (which contains success/data fields)
+  (response) => response.data,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
-      // Only redirect if we are not already on the login page
-      if (window.location.pathname !== '/login') {
+      if (window.location.pathname !== '/login' && window.location.pathname.startsWith('/admin')) {
         window.location.href = '/login';
       }
     }
-    return Promise.reject(error.response?.data || error.message);
+    return Promise.reject(error.response?.data || error);
   }
 );
 
