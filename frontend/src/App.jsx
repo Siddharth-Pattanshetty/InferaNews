@@ -1,78 +1,37 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { Home, FileText, Search, LayoutDashboard, Edit3, Database } from 'lucide-react';
-import './App.css';
+import { Routes, Route } from 'react-router-dom';
+import PublicLayout from './layouts/PublicLayout';
+import AdminLayout from './layouts/AdminLayout';
+import ProtectedRoute from './components/ProtectedRoute';
 
-// --- PAGES ---
-import HomePage from './pages/HomePage';
-import ArticlePage from './pages/ArticlePage';
-import AnalysisPage from './pages/AnalysisPage';
-import SearchPage from './pages/SearchPage';
+import Home from './pages/Home';
+import Search from './pages/Search';
+import Article from './pages/Article';
+import Analyze from './pages/Analyze';
 
-// Admin Pages
-import DashboardPage from './pages/admin/DashboardPage';
-import PublishPage from './pages/admin/PublishPage';
-import ManageContentPage from './pages/admin/ManageContentPage';
+import Login from './pages/admin/Login';
+import Dashboard from './pages/admin/Dashboard';
+import Publish from './pages/admin/Publish';
+import Archive from './pages/admin/Archive';
 
-// --- LAYOUTS ---
-const PublicLayout = ({ children }) => (
-  <div className="app-container">
-    <nav className="top-nav glass-panel-high">
-      <div className="nav-brand">
-        <span className="brand-icon">🧠</span> InferaNews
-      </div>
-      <div className="nav-links">
-        <Link to="/"><Home size={18}/> Feed</Link>
-        <Link to="/analyze"><FileText size={18}/> Analyze</Link>
-        <Link to="/search"><Search size={18}/> Search</Link>
-      </div>
-      <div className="nav-actions">
-        {/* Admin link removed from public civilian route for security */}
-      </div>
-    </nav>
-    <main className="main-content">
-      {children}
-    </main>
-  </div>
-);
-
-const AdminLayout = ({ children }) => (
-  <div className="admin-container">
-    <aside className="admin-sidebar glass-panel-high">
-      <div className="nav-brand">
-        <span className="brand-icon">⚡</span> Admin Center
-      </div>
-      <div className="admin-links">
-        <Link to="/admin"><LayoutDashboard size={18}/> Dashboard</Link>
-        <Link to="/admin/publish"><Edit3 size={18}/> Publish</Link>
-        <Link to="/admin/manage"><Database size={18}/> Manage</Link>
-      </div>
-      <div className="admin-bottom">
-        <Link to="/" className="btn-secondary">Back to Site</Link>
-      </div>
-    </aside>
-    <main className="admin-content">
-      {children}
-    </main>
-  </div>
-);
-
-function App() {
+export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<PublicLayout><HomePage /></PublicLayout>} />
-        <Route path="/article/:id" element={<PublicLayout><ArticlePage /></PublicLayout>} />
-        <Route path="/analyze" element={<PublicLayout><AnalysisPage /></PublicLayout>} />
-        <Route path="/search" element={<PublicLayout><SearchPage /></PublicLayout>} />
+    <Routes>
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/article/:id" element={<Article />} />
+        <Route path="/analyze" element={<Analyze />} />
+      </Route>
 
-        {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout><DashboardPage /></AdminLayout>} />
-        <Route path="/admin/publish" element={<AdminLayout><PublishPage /></AdminLayout>} />
-        <Route path="/admin/manage" element={<AdminLayout><ManageContentPage /></AdminLayout>} />
-      </Routes>
-    </BrowserRouter>
+      <Route path="/login" element={<Login />} />
+
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<Dashboard />} />
+          <Route path="/admin/publish" element={<Publish />} />
+          <Route path="/admin/archive" element={<Archive />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 }
-
-export default App;
