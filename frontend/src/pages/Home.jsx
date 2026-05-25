@@ -29,8 +29,8 @@ export default function Home() {
             onClick={() => setActiveCategory(cat)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               activeCategory === cat
-                ? 'bg-text-primary text-white'
-                : 'bg-surface text-text-secondary border border-border hover:border-gray-400'
+                ? 'bg-accent text-white border border-accent'
+                : 'bg-surface text-text-secondary border border-border hover:border-border-hover'
             }`}
           >
             {cat}

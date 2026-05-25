@@ -53,7 +53,8 @@
 
 @layer base {
   body {
-    @apply bg-bg-primary text-text-primary font-body selection:bg-accent selection:text-white transition-colors duration-200;
+    @apply text-text-primary font-body selection:bg-accent selection:text-white transition-colors duration-300;
+    background-color: var(--bg-primary);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -62,50 +63,50 @@
 }
 
 @layer components {
-  /* Modern Journalistic Cards */
+  /* Cards */
   .editorial-card {
-    @apply bg-surface border border-border transition-all duration-200 overflow-hidden;
+    @apply bg-surface border border-border transition-all duration-300 overflow-hidden;
   }
   
   .editorial-card:hover {
-    @apply shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border-border-hover;
+    @apply shadow-xl shadow-accent/5 border-border-hover -translate-y-1 scale-[1.01];
   }
 
   /* Buttons */
   .btn-primary {
-    @apply bg-accent text-white font-medium px-6 py-2.5 rounded-sm transition-colors hover:bg-accent-hover active:scale-[0.98];
+    @apply bg-accent text-white font-medium px-6 py-2.5 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-accent/30 hover:-translate-y-0.5 active:scale-95;
   }
 
   .btn-outline {
-    @apply bg-transparent border border-border text-text-primary font-medium px-6 py-2.5 rounded-sm transition-all hover:border-border-hover hover:bg-surface-hover;
+    @apply bg-surface border border-border text-text-primary font-medium px-6 py-2.5 rounded-full transition-all duration-300 hover:border-border-hover hover:bg-surface-hover hover:shadow-sm hover:-translate-y-0.5 active:scale-95;
   }
 
   /* Inputs */
   .input-standard {
-    @apply w-full bg-surface border border-border rounded-sm px-4 py-3 text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all;
+    @apply w-full bg-surface border border-border rounded-lg px-4 py-3 text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all duration-300;
   }
 
   /* Tags/Badges */
   .badge-category {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium uppercase tracking-wider bg-surface-muted text-text-secondary border border-border-hover;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-surface-muted text-text-secondary border border-border transition-all hover:bg-surface-hover;
   }
 
   .badge-ai {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-semibold uppercase tracking-wider bg-accent-light text-accent border border-accent/20;
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-accent-light text-accent border border-accent/20;
   }
 }
 
 /* Custom minimal scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-border-hover rounded-full;
+  @apply bg-border rounded-full border-[2px] border-transparent bg-clip-content;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-text-tertiary;
+  @apply bg-border-hover;
 }
