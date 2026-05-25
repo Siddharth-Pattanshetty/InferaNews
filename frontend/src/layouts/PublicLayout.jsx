@@ -1,5 +1,6 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Search, BrainCircuit } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function PublicLayout() {
   return (
@@ -21,6 +22,7 @@ export default function PublicLayout() {
             <Link to="/search" className="text-text-secondary hover:text-text-primary transition-colors">
               <Search size={20} />
             </Link>
+            <ThemeToggle />
           </nav>
         </div>
       </header>
