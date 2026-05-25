@@ -28,7 +28,7 @@ export default function Publish() {
     <div className="max-w-4xl">
       
       <div className="bg-surface border border-border rounded-sm shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-border bg-gray-50 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-border bg-surface-muted flex items-center justify-between">
           <h2 className="font-bold text-text-primary">Intelligence Publishing Engine</h2>
           <span className="badge-ai">Automated ML Pipeline</span>
         </div>
