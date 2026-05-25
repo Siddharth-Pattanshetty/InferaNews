@@ -1,19 +1,23 @@
-const Admin = require('../models/Admin');
+const { prisma } = require('./db');
+const bcrypt = require('bcryptjs');
 
 const seedAdmin = async () => {
   try {
-    const existingAdmin = await Admin.findOne({ username: 'admin' });
+    const existingAdmin = await prisma.admin.findUnique({
+      where: { username: 'admin' },
+    });
+    
     if (!existingAdmin) {
-      await Admin.create({
-        username: 'admin',
-        password: 'admin123',
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('admin123', salt);
+      
+      await prisma.admin.create({
+        data: {
+          username: 'admin',
+          password: hashedPassword,
+        },
       });
       console.log('⚠ Default admin created (username: admin). Change password immediately.');
-    } else if (!existingAdmin.password.startsWith('$2a$') && !existingAdmin.password.startsWith('$2b$')) {
-      // Fix admin with unhashed password from a previous failed seed
-      existingAdmin.password = 'admin123';
-      await existingAdmin.save();
-      console.log('⚠ Admin password was rehashed (was stored in plaintext).');
     }
   } catch (error) {
     console.error('Admin seed error:', error.message);
