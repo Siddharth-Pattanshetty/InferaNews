@@ -31,7 +31,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-bg-primary flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       
       <div className="sm:mx-auto sm:w-full sm:max-w-md mb-8">
         <Link to="/" className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors justify-center font-medium">
@@ -80,7 +80,7 @@ export default function Login() {
             </div>
 
             {error && (
-              <div className="bg-red-50 text-red-600 text-sm p-3 rounded-sm border border-red-100">
+              <div className="bg-danger-bg text-danger-text text-sm p-3 rounded-sm border border-danger-border">
                 {error}
               </div>
             )}
