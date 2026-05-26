@@ -6,7 +6,7 @@ export default function Skeleton({ className, ...props }) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className={twMerge('bg-gray-200 animate-pulse rounded-sm', className)}
+      className={twMerge('bg-border animate-pulse rounded-sm', className)}
       {...props}
     />
   );

@@ -1,20 +1,21 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const { prisma } = require('../config/db');
 const router = express.Router();
 
 // Health check endpoint
-router.get('/health', (req, res) => {
-  const dbState = mongoose.connection.readyState;
-  const states = {
-    0: 'disconnected',
-    1: 'connected',
-    2: 'connecting',
-    3: 'disconnecting',
-  };
+router.get('/health', async (req, res) => {
+  let dbStatus = 'disconnected';
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    dbStatus = 'connected';
+  } catch (error) {
+    dbStatus = 'error';
+  }
+  
   res.json({
     success: true,
     status: 'ok',
-    database: states[dbState] || 'unknown',
+    database: dbStatus,
     timestamp: new Date().toISOString(),
   });
 });

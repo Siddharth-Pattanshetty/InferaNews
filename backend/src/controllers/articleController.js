@@ -1,4 +1,4 @@
-const Article = require('../models/Article');
+const { prisma } = require('../config/db');
 const mlService = require('../services/mlService');
 
 // @desc    Get all articles (paginated, filterable, sortable)
@@ -11,22 +11,27 @@ const getArticles = async (req, res) => {
     const skip = (page - 1) * limit;
 
     // Build filter
-    const filter = {};
+    const where = {};
     if (req.query.category) {
-      filter.category = req.query.category;
+      where.category = req.query.category;
     }
 
-    // Sort: default newest first
-    const sort = { createdAt: -1 };
-
     const [articles, total] = await Promise.all([
-      Article.find(filter).sort(sort).skip(skip).limit(limit),
-      Article.countDocuments(filter),
+      prisma.article.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.article.count({ where }),
     ]);
+
+    // Map _id to id for frontend compatibility
+    const formattedArticles = articles.map(a => ({ ...a, _id: a.id }));
 
     res.json({
       success: true,
-      data: articles,
+      data: formattedArticles,
       pagination: {
         total,
         page,
@@ -47,20 +52,32 @@ const getArticles = async (req, res) => {
 // @access  Public
 const getArticle = async (req, res) => {
   try {
-    const article = await Article.findById(req.params.id);
+    const article = await prisma.article.findUnique({
+      where: { id: req.params.id },
+      include: {
+        similarArticles: true
+      }
+    });
     if (!article) {
       return res.status(404).json({
         success: false,
         message: 'Article not found',
       });
     }
+    
+    // Map _id to id for frontend compatibility
+    const formattedArticle = { 
+      ...article, 
+      _id: article.id,
+      similarArticles: article.similarArticles.map(sa => ({ ...sa, _id: sa.id }))
+    };
+    
     res.json({
       success: true,
-      data: article,
+      data: formattedArticle,
     });
   } catch (error) {
-    // Handle invalid ObjectId format
-    if (error.kind === 'ObjectId') {
+    if (error.code === 'P2023' || error.code === 'P2025') {
       return res.status(404).json({
         success: false,
         message: 'Article not found',
@@ -97,26 +114,21 @@ const createArticle = async (req, res) => {
       summary = mlSummary;
     }
 
-    const article = await Article.create({
-      title,
-      description,
-      content,
-      category: category || 'uncategorized',
-      summary,
+    const article = await prisma.article.create({
+      data: {
+        title,
+        description,
+        content,
+        category: category || 'uncategorized',
+        summary,
+      }
     });
+    
     res.status(201).json({
       success: true,
-      data: article,
+      data: { ...article, _id: article.id },
     });
   } catch (error) {
-    // Mongoose validation error
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map((e) => e.message);
-      return res.status(400).json({
-        success: false,
-        message: messages.join(', '),
-      });
-    }
     res.status(500).json({
       success: false,
       message: error.message,
@@ -129,29 +141,16 @@ const createArticle = async (req, res) => {
 // @access  Private (admin)
 const updateArticle = async (req, res) => {
   try {
-    const article = await Article.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
+    const article = await prisma.article.update({
+      where: { id: req.params.id },
+      data: req.body,
     });
-    if (!article) {
-      return res.status(404).json({
-        success: false,
-        message: 'Article not found',
-      });
-    }
     res.json({
       success: true,
-      data: article,
+      data: { ...article, _id: article.id },
     });
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map((e) => e.message);
-      return res.status(400).json({
-        success: false,
-        message: messages.join(', '),
-      });
-    }
-    if (error.kind === 'ObjectId') {
+    if (error.code === 'P2025') {
       return res.status(404).json({
         success: false,
         message: 'Article not found',
@@ -169,19 +168,15 @@ const updateArticle = async (req, res) => {
 // @access  Private (admin)
 const deleteArticle = async (req, res) => {
   try {
-    const article = await Article.findByIdAndDelete(req.params.id);
-    if (!article) {
-      return res.status(404).json({
-        success: false,
-        message: 'Article not found',
-      });
-    }
+    await prisma.article.delete({
+      where: { id: req.params.id },
+    });
     res.json({
       success: true,
       message: 'Article deleted',
     });
   } catch (error) {
-    if (error.kind === 'ObjectId') {
+    if (error.code === 'P2025') {
       return res.status(404).json({
         success: false,
         message: 'Article not found',
@@ -210,18 +205,29 @@ const searchArticles = async (req, res) => {
     const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 50);
     const skip = (page - 1) * limit;
 
-    const filter = { $text: { $search: query } };
-    const projection = { score: { $meta: 'textScore' } };
-    const sort = { score: { $meta: 'textScore' } };
+    const where = {
+      OR: [
+        { title: { contains: query, mode: 'insensitive' } },
+        { description: { contains: query, mode: 'insensitive' } },
+        { content: { contains: query, mode: 'insensitive' } },
+      ],
+    };
 
     const [articles, total] = await Promise.all([
-      Article.find(filter, projection).sort(sort).skip(skip).limit(limit),
-      Article.countDocuments(filter),
+      prisma.article.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.article.count({ where }),
     ]);
+
+    const formattedArticles = articles.map(a => ({ ...a, _id: a.id }));
 
     res.json({
       success: true,
-      data: articles,
+      data: formattedArticles,
       pagination: {
         total,
         page,

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { Navigate, useNavigate, Link } from 'react-router-dom';
 import { Lock, ArrowLeft } from 'lucide-react';
 
@@ -31,19 +31,19 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-transparent flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative z-10">
       
       <div className="sm:mx-auto sm:w-full sm:max-w-md mb-8">
-        <Link to="/" className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors justify-center font-medium">
+        <Link to="/" className="flex items-center gap-2 text-text-secondary hover:text-accent transition-colors justify-center font-medium drop-shadow-sm">
           <ArrowLeft size={16} /> Return to Public Feed
         </Link>
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-surface py-8 px-4 shadow-sm sm:rounded-sm border border-border sm:px-10">
+        <div className="bg-surface/60 backdrop-blur-2xl py-8 px-4 shadow-2xl shadow-accent/5 sm:rounded-xl border border-border/50 sm:px-10 transition-all duration-300 hover:shadow-accent/10 hover:border-accent/30">
           
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent-light text-accent mb-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/10 text-accent mb-4 backdrop-blur-md border border-accent/20">
               <Lock size={24} />
             </div>
             <h2 className="text-2xl font-bold font-heading text-text-primary">Operator Authentication</h2>
@@ -80,7 +80,7 @@ export default function Login() {
             </div>
 
             {error && (
-              <div className="bg-red-50 text-red-600 text-sm p-3 rounded-sm border border-red-100">
+              <div className="bg-danger-bg/80 backdrop-blur-md text-danger-text text-sm p-3 rounded-lg border border-danger-border/50 shadow-sm">
                 {error}
               </div>
             )}

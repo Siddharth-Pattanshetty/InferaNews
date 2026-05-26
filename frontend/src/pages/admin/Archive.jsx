@@ -28,13 +28,13 @@ export default function Archive() {
 
   return (
     <div className="bg-surface border border-border rounded-sm shadow-sm overflow-hidden">
-      <div className="px-6 py-4 border-b border-border bg-gray-50 flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-border bg-surface-muted flex items-center justify-between">
         <h2 className="font-bold text-text-primary">Intelligence Archive</h2>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="bg-gray-50 text-text-secondary border-b border-border text-xs uppercase tracking-wider">
+          <thead className="bg-surface-muted text-text-secondary border-b border-border text-xs uppercase tracking-wider">
             <tr>
               <th className="px-6 py-4 font-medium">Headline</th>
               <th className="px-6 py-4 font-medium">Category</th>
@@ -60,7 +60,7 @@ export default function Archive() {
               </tr>
             ) : (
               data?.data?.map((article) => (
-                <tr key={article._id} className="hover:bg-gray-50 transition-colors">
+                <tr key={article._id} className="hover:bg-surface-hover transition-colors">
                   <td className="px-6 py-4">
                     <span className="font-medium text-text-primary line-clamp-1">{article.title}</span>
                   </td>

@@ -21,7 +21,7 @@ export default function Dashboard() {
     <div className="space-y-8 max-w-5xl">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-surface border border-border p-6 rounded-sm shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center">
             <Database size={24} />
           </div>
           <div>
@@ -31,19 +31,19 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-surface border border-border p-6 rounded-sm shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
             <Activity size={24} />
           </div>
           <div>
             <p className="text-sm text-text-secondary font-medium">ML Service</p>
-            <p className="text-xl font-bold text-emerald-600 flex items-center gap-2 mt-1">
+            <p className="text-xl font-bold text-emerald-500 flex items-center gap-2 mt-1">
               <CheckCircle2 size={20} /> Online
             </p>
           </div>
         </div>
 
         <div className="bg-surface border border-border p-6 rounded-sm shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-purple-500/10 text-purple-500 flex items-center justify-center">
             <FileText size={24} />
           </div>
           <div>
@@ -54,7 +54,7 @@ export default function Dashboard() {
       </div>
 
       <div className="bg-surface border border-border rounded-sm shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-border bg-gray-50">
+        <div className="px-6 py-4 border-b border-border bg-surface-muted">
           <h2 className="font-bold text-text-primary">Intelligence Distribution</h2>
         </div>
         <div className="p-6">
@@ -66,9 +66,9 @@ export default function Dashboard() {
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {Object.entries(categoryCounts).map(([cat, count]) => (
-                <div key={cat} className="p-4 border border-border rounded-sm">
+                <div key={cat} className="p-4 border border-border rounded-sm bg-bg-primary">
                   <p className="text-sm text-text-secondary uppercase tracking-wider mb-1">{cat}</p>
-                  <p className="text-2xl font-bold">{count}</p>
+                  <p className="text-2xl font-bold text-text-primary">{count}</p>
                 </div>
               ))}
               {Object.keys(categoryCounts).length === 0 && (

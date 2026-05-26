@@ -1,6 +1,7 @@
 import { Outlet, Navigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LayoutDashboard, PenTool, Archive, LogOut, Settings } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
@@ -17,7 +18,7 @@ export default function AdminLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-bg-primary flex">
       {/* Sidebar */}
       <aside className="w-64 bg-surface border-r border-border flex flex-col">
         <div className="h-16 flex items-center px-6 border-b border-border">
@@ -37,7 +38,7 @@ export default function AdminLayout() {
                 className={`flex items-center gap-3 px-3 py-2 rounded-sm text-sm font-medium transition-colors ${
                   isActive 
                     ? 'bg-accent-light text-accent' 
-                    : 'text-text-secondary hover:bg-gray-100 hover:text-text-primary'
+                    : 'text-text-secondary hover:bg-surface-muted hover:text-text-primary'
                 }`}
               >
                 <Icon size={18} />
@@ -59,7 +60,7 @@ export default function AdminLayout() {
           </div>
           <button
             onClick={logout}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-sm text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-sm text-sm font-medium text-danger-text hover:bg-danger-bg transition-colors"
           >
             <LogOut size={18} />
             Sign Out
@@ -74,6 +75,7 @@ export default function AdminLayout() {
             {navItems.find(i => i.path === location.pathname)?.name || 'Admin'}
           </h1>
           <div className="flex items-center gap-4 text-text-tertiary">
+            <ThemeToggle />
             <Settings size={20} className="hover:text-text-primary cursor-pointer transition-colors" />
           </div>
         </header>
